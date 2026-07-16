@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LifeOS audio host</title>
+  </head>
+  <body>
+    <!-- This window is never shown. It exists only to host speechSynthesis and <audio>,
+         because both are renderer APIs but a reminder must speak from the tray. -->
+    <script type="module" src="/audio-host.ts"></script>
+  </body>
+</html>

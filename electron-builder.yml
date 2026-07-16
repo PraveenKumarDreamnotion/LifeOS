@@ -1,0 +1,62 @@
+appId: com.dreamnotion.lifeos
+# Determines %APPDATA%\LifeOS\. Must stay filesystem-legal.
+productName: LifeOS
+copyright: Copyright © 2026 DreamNotion
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - out/**/*
+  - package.json
+
+# Shipped UNPACKED, next to the asar. The STT model and audio must never live inside
+# a compressed asar. Populated from Day 5 onward.
+extraResources:
+  - from: assets/icons
+    to: icons
+  - from: resources/models/stt
+    to: models/stt
+  # - from: resources/audio      # enabled when the sing MP3 lands (deferred)
+  #   to: audio
+
+# Native .node binaries and their DLLs cannot be loaded from inside a compressed asar.
+#
+# SPIKE-1 PASSED: node:sqlite is built into Electron, so better-sqlite3 is NOT used
+# and needs no asarUnpack entry. That entire class of packaging failure is gone.
+#
+# sherpa-onnx-win-x64 carries sherpa-onnx.node + onnxruntime.dll and MUST be unpacked.
+asarUnpack:
+  - '**/node_modules/sherpa-onnx-node/**'
+  - '**/node_modules/sherpa-onnx-win-x64/**'
+
+win:
+  target:
+    - nsis
+    - portable
+  icon: build/icon.png
+  # The packaged process name in Task Manager + the Details tab. Defaults to productName, but set
+  # explicitly so the .exe is always "LifeOS.exe" (never "electron"). The exe's version metadata
+  # (FileDescription/ProductName) is derived from productName by electron-builder.
+  executableName: LifeOS
+
+nsis:
+  oneClick: false
+  # ◄── THE no-admin guarantee. A per-user install writes to %LOCALAPPDATA%\Programs\,
+  #     touches no system directory, and triggers no UAC prompt.
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  # Not cosmetic: Windows toasts require a Start Menu shortcut carrying the
+  # AppUserModelID. Without it, notifications silently fail.
+  createStartMenuShortcut: true
+  shortcutName: LifeOS
+
+portable:
+  artifactName: ${productName}-${version}-portable.exe
+
+publish:
+  - provider: github
+    owner: dreamnotion
+    repo: lifeos

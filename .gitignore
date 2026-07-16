@@ -1,0 +1,16 @@
+node_modules/
+out/
+release/
+dist/
+*.log
+*.tsbuildinfo
+.DS_Store
+
+# Large STT model binaries — not committed to git; downloaded/placed into resources/models/stt/
+# and shipped via the release artifacts. Keep the attribution + tokens.
+resources/models/stt/*.onnx
+
+# Local scratch
+/tmp/
+scripts/verify-*.mjs
+scripts/*-spike.cjs
