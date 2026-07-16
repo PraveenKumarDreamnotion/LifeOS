@@ -1,0 +1,4 @@
+owner: dreamnotion
+repo: lifeos
+provider: github
+updaterCacheDirName: lifeos-updater
